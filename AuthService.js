@@ -1,6 +1,5 @@
 import buffer from 'buffer';
 import { AsyncStorage, Alert } from 'react-native';
-import _ from 'lodash';
 
 const authKey = 'auth';
 const appUrl = 'app_url';
@@ -8,18 +7,29 @@ const appUrl = 'app_url';
 class AuthService {
 
   getAuthInfo(cb) {
-    if (AsyncStorage.getItem('auth') && AsyncStorage.getItem('app_url')) {
-      var authInfo = {
-          header: {
-              Authorization: 'Basic ' + AsyncStorage.getItem(authKey)
-          }
-      }
-      return cb(null, authInfo);
-    } else {
-      return cb(true);
-    }
+    AsyncStorage.multiGet(['auth', 'app_url'], (err, val)=> {
+        if(err){
+            return cb(err);
+        }
+
+        if(!val){
+            return cb();
+        }
+
+        const authValue = val[0][1]
+        const appUrlVal = val[1][1]
+
+        return cb(authValue, appUrlVal);
+    });
   }
 
+  appUrlValue() {
+    AsyncStorage.getItem('app_url').then((value) => {
+      return value;
+      }, (error) => {
+      console.log(error)
+    });
+  }
   login(creds, cb){
         var b = new buffer.Buffer(creds.username + ':' + creds.password);
         var encodedAuth = b.toString('base64');
@@ -58,11 +68,34 @@ class AuthService {
     }
 
     async logout(){
-      console.log(await AsyncStorage.getItem('app_url'));
       try {
         await AsyncStorage.removeItem(authKey);
       } catch (error) {
         console.log('AsyncStorage error: ' + error.message);
+      }
+    }
+
+    _retrieveAppUrl = async () => {
+      try {
+        const value = await AsyncStorage.getItem('app_url');
+        if (value !== null) {
+          console.log('+' + value);
+          return value;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    _retrieveAuth = async () => {
+      try {
+        const value = await AsyncStorage.getItem('auth');
+        if (value !== null) {
+          console.log(value);
+          return value;
+        }
+      } catch (error) {
+        console.log(error);
       }
     }
 
