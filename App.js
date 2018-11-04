@@ -34,7 +34,7 @@ export default class GladSquidTest extends Component {
 
      if (this.state.isLoggedIn) {
        return (
-          <Home onLogout={this.onLogout}/>
+          <Home onLogout={this.onLogout} />
        )
      } else {
        return(
