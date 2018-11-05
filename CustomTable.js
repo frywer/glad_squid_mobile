@@ -3,20 +3,10 @@ import { AppRegistry, Text, View, FlatList, StyleSheet} from 'react-native';
 import AuthService from './AuthService';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import TabBar from "react-native-underline-tabbar";
+import CustomEntity from './CustomEntity';
 
 const Page = ({label}) => (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          1
-        </Text>
-        <Text style={styles.instructions}>
-        2
-        </Text>
-        <Text style={styles.instructions}>
-          Press Cmd+R to reload,{'\n'}
-          Cmd+D or shake for dev menu
-        </Text>
-      </View>
+  <CustomEntity customTableID={label} />
 );
 
 class CustomTable extends Component {
@@ -30,7 +20,6 @@ class CustomTable extends Component {
 
   componentDidMount(){
     this.fetchCustomTables();
-    console.log(this.state.customTables)
   }
 
   fetchCustomTables(){
@@ -50,32 +39,15 @@ class CustomTable extends Component {
     })
   }
 
-  renderRow(rowData){
-    return(
-      <Text>
-        {rowData}
-      </Text>
-    )
-  }
-
   render() {
     return(
-      // {/*<View>
-      //
-      //   <FlatList
-      //     data={this.state.customTables}
-      //     renderItem={({item}) => <Text>{item.name}</Text>}
-      //     keyExtractor={(item, index) => index.toString()}
-      //   />
-      // </View>*/}
-
       <View style={styles.container}>
         <ScrollableTabView
             tabBarActiveTextColor="#9565a1"
             renderTabBar={() => <TabBar underlineColor="#9565a1" />}>
             {
               this.state.customTables.map((ct, i)=>(
-                  <Page tabLabel={{label: ct.name}} label={ct.name} key={ct.id}/>
+                  <Page tabLabel={{label: ct.name, badge: ct.entities_count}} label={ct.id} key={ct.id} />
               ))
             }
         </ScrollableTabView>
