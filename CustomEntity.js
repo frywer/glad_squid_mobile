@@ -46,13 +46,13 @@ class CustomEntity extends Component {
     return(
        <FlatList data={this.state.customEntities}
           renderItem={({item})=> (
-            <Card title={item.name} key={item.custom_entity_id}>
+            <Card title={item.custom_entity_name} key={item.custom_entity_id}>
               {
                Object.entries(item).map(([key, value], j) => {
                  if(key !== 'custom_entity_id' && key !== 'custom_entity_name'){
                    return (
-                     <View key={j} style={styles.user}>
-                       <Text style={styles.name}>{key}:{value.toString()}</Text>
+                     <View key={j} >
+                       <Text>{key}:{value.toString()}</Text>
                      </View>
                    );
                  }
